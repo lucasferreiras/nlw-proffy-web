@@ -1,35 +1,51 @@
 import React from 'react'
 
 import whatappIcon from '../../assets/images/icons/whatsapp.svg'
+import api from '../../services/api';
 
 import './styles.css';
 
-function TeacherItem() {
+export interface Teacher {
+  avatar: string,
+  bio: string,
+  cost: number,
+  id: number,
+  name: string,
+  subject: string,
+  whatsapp: string,
+}
+interface TeacherItemProps {
+  teacher: Teacher
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+
+  function createNewConnection() {
+    api.post('connections', {
+      user_id: teacher.id
+    })
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img src="https://media-exp1.licdn.com/dms/image/C4D03AQFiwhEidlxc5g/profile-displayphoto-shrink_100_100/0?e=1602115200&v=beta&t=ePyV1A-j9H5DGdGmkQX3SwGJh2I5HSngTba1CVY5VHI" alt="Lucas Ferreira" />
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>Lucas Ferreira</strong>
-          <span>Fisica</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
-      <p>
-        Instrutor de educação Física para iniciantes, minha missão de vida é levar saúde e contribuir para o crescimento de quem se interessar.
-        <br /><br />
-        Comecei a minha jornada profissional em 2001, quando meu pai me deu dois alteres de 32kg com a seguinte
-        condição:"Aprenda a fazer dinheiro com isso!"
-      </p>
+      <p>{teacher.bio}</p>
 
       <footer>
         <p>
           Preço/hora
-        <strong>R$40,00</strong>
+        <strong>R${teacher.cost}</strong>
         </p>
-        <button type="button">
+        <a target="blank" onClick={createNewConnection} href={`https://wa.me/${teacher.whatsapp}`}>
           <img src={whatappIcon} alt="whatsapp" />
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   )
